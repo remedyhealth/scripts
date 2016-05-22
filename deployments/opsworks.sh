@@ -15,17 +15,19 @@ usage () {
 start_deploy () {
   STACK_ID=$1
   APP_ID=$2
+  AWS_REGION=$3
 
-  aws --region='us-east-1' opsworks create-deployment --stack-id=${STACK_ID} --app-id=${APP_ID} --comment="Codeship Build ${CI_BUILD_NUMBER}" --command='{"Name": "deploy"}' | grep DeploymentId | awk -F\" '{print $4}'
+  aws --region=${AWS_REGION} opsworks create-deployment --stack-id=${STACK_ID} --app-id=${APP_ID} --comment="Codeship Build ${CI_BUILD_NUMBER}" --command='{"Name": "deploy"}' | grep DeploymentId | awk -F\" '{print $4}'
 }
 
 monitor_deploy () {
   DEPLOYMENT_ID=$1
+  AWS_REGION=$2
 
-  DEPLOYMENT_RESULT=`aws --region='us-east-1' opsworks describe-deployments --deployment-id=${DEPLOYMENT_ID} | grep Status | awk -F\" '{print $4}' | egrep '(successful|failed)'`
+  DEPLOYMENT_RESULT=`aws --region=${AWS_REGION} opsworks describe-deployments --deployment-id=${DEPLOYMENT_ID} | grep Status | awk -F\" '{print $4}' | egrep '(successful|failed)'`
   while [ $? -ne 0 ]; do
     sleep 10
-    DEPLOYMENT_RESULT=`aws --region='us-east-1' opsworks describe-deployments --deployment-id=${DEPLOYMENT_ID} | grep Status | awk -F\" '{print $4}' | egrep '(successful|failed)'`
+    DEPLOYMENT_RESULT=`aws --region=${AWS_REGION} opsworks describe-deployments --deployment-id=${DEPLOYMENT_ID} | grep Status | awk -F\" '{print $4}' | egrep '(successful|failed)'`
   done
   echo $DEPLOYMENT_RESULT
 }
@@ -51,6 +53,7 @@ evaluate_result () {
 
 STACK_ID=$1
 APP_ID=$2
+AWS_REGION=${AWS_REGION:-'us-east-1'}
 
 if [ -z "${STACK_ID}" ] || [ -z "${APP_ID}" ]; then
   usage
@@ -62,9 +65,9 @@ if [ -z "${AWS_ACCESS_KEY_ID}" ] || [ -z "${SECRET_ACCESS_KEY}" ]; then
   exit 1
 fi
 
-STACKNAME=`aws --region='us-east-1' opsworks describe-stacks --stack-id $STACK_ID | grep Name | grep -v Chef | awk -F\" '{print $4}'`
-APPNAME=`aws --region='us-east-1' opsworks describe-apps --app-id $APP_ID | grep Shortname | awk -F\" '{print $4}'`
-DEPLOYMENT_ID=$(start_deploy $STACK_ID $APP_ID)
+STACKNAME=`aws --region=${AWS_REGION} opsworks describe-stacks --stack-id ${STACK_ID} | grep Name | grep -v Chef | awk -F\" '{print $4}'`
+APPNAME=`aws --region=${AWS_REGION} opsworks describe-apps --app-id ${APP_ID} | grep Shortname | awk -F\" '{print $4}'`
+DEPLOYMENT_ID=$(start_deploy ${STACK_ID} ${APP_ID} ${AWS_REGION})
 echo "Deployment '${DEPLOYMENT_ID}' started."
-DEPLOYMENT_RESULT=$(monitor_deploy $DEPLOYMENT_ID)
+DEPLOYMENT_RESULT=$(monitor_deploy ${DEPLOYMENT_ID} ${AWS_REGION})
 evaluate_result "$DEPLOYMENT_RESULT" "$STACKNAME" "$APPNAME"
