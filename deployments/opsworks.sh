@@ -60,8 +60,8 @@ if [ -z "${STACK_ID}" ] || [ -z "${APP_ID}" ]; then
   exit 1
 fi
 
-if [ -z "${AWS_ACCESS_KEY_ID}" ] || [ -z "${SECRET_ACCESS_KEY}" ]; then
-  echo "AWS_ACCESS_KEY_ID and SECRET_ACCCESS_KEY must be set"
+if [ -z "${AWS_ACCESS_KEY_ID}" ] || [ -z "${AWS_SECRET_ACCESS_KEY}" ]; then
+  echo "AWS_ACCESS_KEY_ID and AWS_SECRET_ACCCESS_KEY must be set"
   exit 1
 fi
 
