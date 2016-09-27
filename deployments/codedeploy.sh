@@ -27,10 +27,10 @@ start_deploy () {
 monitor_deploy () {
   DEPLOYMENT_ID=$1
 
-  DEPLOYMENT_RESULT=`aws deploy get-deployment --deployment-id=${DEPLOYMENT_ID} | grep status | awk -F\" '{print $4}' | egrep '(Successful|Failed)'`
+  DEPLOYMENT_RESULT=`aws deploy get-deployment --deployment-id=${DEPLOYMENT_ID} | grep status | awk -F\" '{print $4}' | egrep '(Succeeded|Failed)'`
   while [ $? -ne 0 ]; do
     sleep 10
-    DEPLOYMENT_RESULT=`aws deploy get-deployment --deployment-id=${DEPLOYMENT_ID} | grep status | awk -F\" '{print $4}' | egrep '(Successful|Failed)'`
+    DEPLOYMENT_RESULT=`aws deploy get-deployment --deployment-id=${DEPLOYMENT_ID} | grep status | awk -F\" '{print $4}' | egrep '(Succeeded|Failed)'`
   done
   echo $DEPLOYMENT_RESULT
 }
@@ -47,7 +47,7 @@ evaluate_result () {
     curl --data "payload={\"text\": \"*$DEPLOYMENT_GROUP* *$APPLICATION_NAME* deployment triggered by *CodeDeploy* was *$DEPLOYMENT_RESULT*\"}" "$SLACK_WEBHOOK_URL"
   fi
 
-  if [ "${DEPLOYMENT_RESULT}" == "Successful" ]; then
+  if [ "${DEPLOYMENT_RESULT}" == "Succeeded" ]; then
     exit 0
   else
     exit 1
