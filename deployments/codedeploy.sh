@@ -16,7 +16,7 @@ start_deploy () {
   APPLICATION_NAME=$1
   DEPLOYMENT_GROUP=$2
   S3_BUCKET=$3
-  S3_KEY=$3
+  S3_KEY=$4
 
   aws deploy create-deployment --application-name "${APPLICATION_NAME}" \
                                --deployment-group-name "${DEPLOYMENT_GROUP}" \
@@ -57,7 +57,7 @@ evaluate_result () {
 APPLICATION_NAME=$1
 DEPLOYMENT_GROUP=$2
 S3_BUCKET=$3
-S3_KEY=$3
+S3_KEY=$4
 
 if [ -z "${APPLICATION_NAME}" ] || [ -z "${DEPLOYMENT_GROUP}" ] || [ -z "${S3_BUCKET}" ] || [ -z "${S3_KEY}" ]; then
   usage
