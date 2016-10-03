@@ -29,6 +29,8 @@ extract_logs_from_last_month () {
     echo "Failed to extract logs."
     exit 1
   fi
+
+  chown awstats $OUTPUT
 }
 
 remove_entries_from_active_log () {
