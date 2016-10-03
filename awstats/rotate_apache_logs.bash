@@ -23,7 +23,7 @@ extract_logs_from_last_month () {
   OUTPUT="${AWSTATS_BASE}/raw/${SITE}/${SERVER_NAME}_${LAST_MONTH}${LAST_MONTHS_YEAR}_$(basename $LOGFILE)"
 
   echo "Extracting logs from ${LAST_MONTH} ${LAST_MONTHS_YEAR} to ${OUTPUT}"
-  egrep "\[[0-9]{2,2}/${LAST_MONTH}/${LAST_MONTHS_YEAR}" $LOGFILE > ${OUTPUT}
+  egrep "\[[0-9][0-9]/${LAST_MONTH}/${LAST_MONTHS_YEAR}" $LOGFILE > ${OUTPUT}
 
   if [ "$?" != "0" ]; then
     echo "Failed to extract logs."
@@ -37,7 +37,7 @@ remove_entries_from_active_log () {
   LAST_MONTHS_YEAR=$3
 
   echo "Removing entries from ${LAST_MONTH} ${LAST_MONTHS_YEAR} in ${LOGFILE}"
-  sed "/\[[0-9][0-9]\/${LAST_MONTH}\/${LAST_MONTHS_YEAR}/d" $LOGFILE
+  sed -i "/\[[0-9][0-9]\/${LAST_MONTH}\/${LAST_MONTHS_YEAR}/d" $LOGFILE
 
   if [ "$?" != "0" ]; then
     echo "Failed to remove entries from active log."
