@@ -54,9 +54,9 @@ port_checks () {
   HOST=$1
 
   echo "* Open Ports Checks"
-  for port in `nmap docs.rmdy.hm -PN | grep open | awk -F/ '{print $1}'`; do
+  for port in `nmap $HOST -PN | grep open | awk -F/ '{print $1}'`; do
     case $port in
-      22|80|443)
+      22|25|80|443)
         eval_result "0", "0", "${port} is open"
         ;;
       *)
