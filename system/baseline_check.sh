@@ -130,8 +130,8 @@ service_checks () {
 infrastructure_checks () {
   HOST=$1
 
-  IP==$(ssh ${SSH_USERNAME}@${HOST} "ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1'")
-  if [ $(echo $IP | cut -c2-6) != "${OVERHEAD_SUBNET_PREFIX}" ]; then
+  IP=$(ssh ${SSH_USERNAME}@${HOST} "ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1'")
+  if [ $(echo $IP | cut -c1-5) != "${OVERHEAD_SUBNET_PREFIX}" ]; then
     ssh ${SSH_USERNAME}@${HOST} "echo 'moo' | nc -w2 smtp-relay.gmail.com 25" > /dev/null 2>&1
     eval_result "$?" "1" "Outbound port 25 is blocked to external relay"
   fi
