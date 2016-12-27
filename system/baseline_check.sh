@@ -52,13 +52,23 @@ auth_checks () {
 
 port_checks () {
   HOST=$1
+  HOST_NAME=$(ssh ${SSH_USERNAME}@${HOST} "hostname -f")
 
   echo "* Open Ports Checks"
   for port in `nmap $HOST -PN | grep open | awk -F/ '{print $1}'`; do
     case $port in
-      22|25|80|443)
+      22|80|443)
         eval_result "0", "0", "${port} is open"
         ;;
+      25)
+        if [ "$HOST_NAME" != "${POSTFIX_MAILRELAY}" ]; then
+          eval_result "1", "0", "${port} is closed"
+        fi
+        ;;
+      514|20514)
+        if [ "$HOST_NAME" != "${LOGSERVER}" ]; then
+          eval_result "1", "0", "${port} is closed"
+        fi
       *)
         eval_result "1", "0", "${port} is closed"
     esac
