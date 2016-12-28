@@ -69,6 +69,7 @@ port_checks () {
         if [ "$HOST_NAME" != "${LOGSERVER}" ]; then
           eval_result "1", "0", "${port} is closed"
         fi
+        ;;
       *)
         eval_result "1", "0", "${port} is closed"
     esac
