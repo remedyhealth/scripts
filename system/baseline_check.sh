@@ -78,10 +78,13 @@ port_checks () {
 
 service_checks () {
   HOST=$1
+  HOST_NAME=$(ssh ${SSH_USERNAME}@${HOST} "hostname -f")
 
   echo "* Services Configuration Checks"
-  ssh ${SSH_USERNAME}@${HOST} "postconf | grep ^relayhost | grep '\\[${POSTFIX_RELAYHOST}\\]$'" > /dev/null 2>&1
-  eval_result "$?" "0" "Postfix is relaying to ${POSTFIX_RELAYHOST}"
+  if [ "$HOST_NAME" != "${POSTFIX_MAILRELAY}" ]; then
+    ssh ${SSH_USERNAME}@${HOST} "postconf | grep ^relayhost | grep '\\[${POSTFIX_RELAYHOST}\\]$'" > /dev/null 2>&1
+    eval_result "$?" "0" "Postfix is relaying to ${POSTFIX_RELAYHOST}"
+  fi
 
   ssh ${SSH_USERNAME}@${HOST} "grep '^PermitRootLogin no' /etc/ssh/sshd_config" > /dev/null 2>&1
   eval_result "$?" "0" "sshd has PermitRootLogin set to 'no'"
@@ -143,16 +146,38 @@ infrastructure_checks () {
   fi
 }
 
+cloudwatch_checks () {
+  HOST=$1
+  HOST_NAME=$2
+
+  aws cloudwatch describe-alarms --alarm-names ${HOST_NAME}_High-CPUUtilization | grep AlarmName > /dev/null 2>&1
+  eval_result "$?" "0" "CPU Utilization is monitored"
+
+  aws cloudwatch describe-alarms --alarm-names ${HOST_NAME}_High-DiskInodeUtilization-/ | grep AlarmName > /dev/null 2>&1
+  eval_result "$?" "0" "/ Disk Inode Utilization is monitored"
+
+  aws cloudwatch describe-alarms --alarm-names ${HOST_NAME}_High-DiskSpaceUtilization-/ | grep AlarmName > /dev/null 2>&1
+  eval_result "$?" "0" "/ Disk Space Utilization is monitored"
+
+  aws cloudwatch describe-alarms --alarm-names ${HOST_NAME}_High-MemoryUtilization | grep AlarmName > /dev/null 2>&1
+  eval_result "$?" "0" "Memory Utilization is monitored"
+
+  aws cloudwatch describe-alarms --alarm-names ${HOST_NAME}_High-StatusCheckFailed | grep AlarmName > /dev/null 2>&1
+  eval_result "$?" "0" "EC2 Status is monitored"
+}
+
 run_all_checks () {
   HOST=$1
   OUTDIR=$2
   HOST_NAME=$(ssh ${SSH_USERNAME}@${HOST} "hostname -f")
+  HOST_NAME_SHORT=$(ssh ${SSH_USERNAME}@${HOST} "hostname")
 
   echo "[${HOST_NAME}]" > ${OUTDIR}/${HOST}.out
   auth_checks $HOST >> ${OUTDIR}/${HOST}.out
   port_checks $HOST >> ${OUTDIR}/${HOST}.out
   service_checks $HOST >> ${OUTDIR}/${HOST}.out
   infrastructure_checks $HOST >> ${OUTDIR}/${HOST}.out
+  cloudwatch_checks $HOST $HOST_NAME_SHORT >> ${OUTDIR}/${HOST}.out
 
   grep FAIL ${OUTDIR}/${HOST}.out > /dev/null 2>&1
   if [ $? -eq 0 ]; then
