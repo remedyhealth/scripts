@@ -14,7 +14,7 @@ fi
 
 . ~/.baseline_check.cfg
 
-gather_ips () {
+gather_ids () {
   OUTDIR=$1
 
   echo "* Gathering Production instance IDs from ${VPCS}"
@@ -55,6 +55,7 @@ reboot_server () {
   echo "  ip: ${IP}"
   echo "  instance-id: ${INSTANCE_ID}"
   aws ec2 reboot-instances --instance-ids ${INSTANCE_ID}
+  sleep 30
   STATUS=`aws ec2 describe-instance-status --instance-ids ${INSTANCE_ID} | grep passed | wc -l | grep 2`
   while [ $? -ne 0 ]; do
     sleep 10
@@ -63,6 +64,7 @@ reboot_server () {
   echo "  EC2 status-checks: 2/2"
   grep ${INSTANCE_ID} ${OUTDIR}/elbs.txt > /dev/null
   if [ $? -eq 0 ]; then
+    sleep 30
     ELB_NAME=`grep ${INSTANCE_ID} ${OUTDIR}/elbs.txt | awk -F, '{print $NF}'`
     echo -n "  ELB ${ELB_NAME} status-checks: "
     sleep 30
@@ -77,8 +79,8 @@ reboot_server () {
 
 OUTDIR=`mktemp -d`
 echo "* Output going to '${OUTDIR}'"
-gather_ips $OUTDIR
-echo "* Got em! Starting checks..."
+gather_ids $OUTDIR
+echo "* Got em! Starting reboot process..."
 
 for HOST in $(cat ${OUTDIR}/hosts.txt); do
   INSTANCE_ID=$(echo $HOST | awk -F, '{print $1}')
