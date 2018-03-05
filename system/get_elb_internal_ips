@@ -1,0 +1,3 @@
+#!/bin/bash
+
+aws ec2 describe-network-interfaces --filters "Name=description,Values=ELB $1" |grep -wE 'Description|PrivateIpAddress' | egrep -o '([0-9]+\.)+[0-9]+' | uniq

@@ -33,7 +33,7 @@ gather_ids () {
   done
   echo "* Gathering ELB names"
   for i in $(aws elb describe-load-balancers --query LoadBalancerDescriptions[*].[Instances,LoadBalancerName] | egrep -v '(\[|\]|\{|\})' | awk -F\" '{print $(NF-1)}'); do
-    echo $i | grep 'i-' > /dev/null
+    echo $i | grep '^i-' > /dev/null
     if [ "$?" == "0" ]; then
       echo -n $i, >> ${OUTDIR}/elbs.txt
     else
@@ -78,6 +78,7 @@ reboot_server () {
 }
 
 OUTDIR=`mktemp -d`
+#OUTDIR="/var/folders/hw/4nv54xc11mv854z2sfw7sc2r0000gn/T/tmp.BkqcxbWu"
 echo "* Output going to '${OUTDIR}'"
 gather_ids $OUTDIR
 echo "* Got em! Starting reboot process..."
@@ -85,6 +86,7 @@ echo "* Got em! Starting reboot process..."
 for HOST in $(cat ${OUTDIR}/hosts.txt); do
   INSTANCE_ID=$(echo $HOST | awk -F, '{print $1}')
   IP=$(echo $HOST | awk -F, '{print $2}')
+  echo "Rebooting $INSTANCE_ID ..."
   reboot_server $INSTANCE_ID $IP $OUTDIR
 done
 

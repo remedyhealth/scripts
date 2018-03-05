@@ -187,11 +187,12 @@ run_all_checks () {
   fi
 }
 
-OUTDIR=`mktemp -d`
+#OUTDIR=`mktemp -d`
+OUTDIR="/var/folders/hw/4nv54xc11mv854z2sfw7sc2r0000gn/T/tmp.QXlpIxfy"
 echo "* Output going to '${OUTDIR}'"
-echo "* Gathering IP addresses from ${VPCS}"
-gather_ips $OUTDIR
-echo "* Got em! Starting checks..."
+#echo "* Gathering IP addresses from ${VPCS}"
+#gather_ips $OUTDIR
+#echo "* Got em! Starting checks..."
 
 for HOST in $(cat ${OUTDIR}/hosts.txt); do
   run_all_checks $HOST $OUTDIR
