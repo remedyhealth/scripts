@@ -1,11 +1,5 @@
 const fetch = require('node-fetch')
-const { Diff2Html } = require('diff2html')
-const fs = require('fs')
-const { promisify } = require('util')
-const exec = promisify(require('child_process').exec)
-
-const styles = fs.readFileSync(__dirname + '/node_modules/diff2html/dist/diff2html.min.css')
-const scripts = fs.readFileSync(__dirname + '/node_modules/diff2html/dist/diff2html.min.js')
+const diffchecker = require('diffchecker/dist/transmit').default
 
 const request = async (path) => {
   const res = await fetch(path)
@@ -25,55 +19,14 @@ const getHTML = async (path) => {
   }
 }
 
-const cleanHtml = html => {
-  // return html.replace(new RegExp('"'), '\"')
-  return html.split('\n').splice(0, 100).map(line => line.replace(/"/g, '\\"'))
-}
-
 const evaluate = async (path) => {
   const html = await getHTML(path)
-  // const diff = htmlDiffer.diffHtml(html.prod, html.beta)
-  // const isEqual = htmlDiffer.isEqual(html.prod, html.beta)
 
-  const { stdout, stderr } = await exec(`git diff $(echo "${cleanHtml(html.prod)}" | git hash-object -w --stdin) $(echo "${cleanHtml(html.beta)}" | git hash-object -w --stdin)  --word-diff`)
-
-  if (stderr || !stdout) {
-    // do something...
-  } else {
-    const cleaned = stdout.replace(new RegExp('\-\-\- a\/.+', 'gm'), '--- a/file.html').replace(new RegExp('\\+\\+\\+ b\/.+', 'gm'), '+++ b/file.html')
-    console.log(cleaned)
-    const diffHtml = Diff2Html.getPrettyHtml(cleaned, {
-      inputFormat: 'diff',
-      showFiles: true,
-      matching: 'lines',
-      outputFormat: 'side-by-side'
-    })
-    fs.writeFileSync(
-      __dirname + `/${path.split('/').join('-')}.html`,
-      `
-<html>
-<head>
-<style>
-  ${styles}
-</style>
-<script>${scripts}</script>
-</head>
-<body>
-${diffHtml}
-</body>
-</html>
-`
-    )
-  }
-
-  // if (isEqual) {
-  //   console.log(`- Equal`)
-  // } else {
-  //   console.log(`- NOT EQUAL`)
-  // }
-  // console.log('')
-  // logger.logDiffText(diff)
-  // fs.writeFileSync(__dirname + `/${path.split('/').join('-')}.html`, `<style>.red { color: red; } .green { color: green; }</style><ul>${text}</ul>`)
+  // this opens your browser every time...
+  diffchecker({
+    left: html.beta,
+    right: html.prod
+  })
   return true
 }
 
