@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "diff2html": "^2.7.0",
+    "diffchecker": "^0.1.4",
     "html-differ": "^1.4.0",
     "node-fetch": "^2.3.0"
   }
