@@ -24,7 +24,7 @@ const evaluate = async (path) => {
 
   // this opens your browser every time...
   diffchecker({
-    left: html.beta,
+    left: html.beta.split('beta.healthcentral.com').join('www.healthcentral.com'),
     right: html.prod
   })
   return true
