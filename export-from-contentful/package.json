@@ -1,0 +1,16 @@
+{
+  "name": "export-from-contentful",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "contentpull": "^2.1.0",
+    "dotenv-defaults": "^1.0.2"
+  }
+}
