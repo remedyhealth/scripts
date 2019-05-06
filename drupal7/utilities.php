@@ -262,7 +262,38 @@ function replaceHttpForHttpsInContent($content) {
 }
 
 /**
-  * Finds all HTTP links in a string
+  * Finds all HTML anchors in a string and do stuff
+  *
+  * @param string $content The content that might contain HTTP URLs
+  * @return string The content modified to update
+  */
+  function changeAnchorTagsInContent($content) {
+    $migratedContent = $content;
+    $matchTags = findAnchorsInString($content);
+    foreach ($matchTags as $tag) {
+      $attributes = findAnchorsAttributes($tag);
+
+      $opensInNewWindow = $attributes['target'] === "_blank";
+      if (!$opensInNewWindow) {
+        continue;
+      }
+
+      preg_match('/^https?:\/\//', $attributes['href'], $matchesHttp);
+      $isAbsoluteUrl = !empty($matchesHttp);
+      if (!$isAbsoluteUrl || isBerkeleyWellnessUrl($attributes['href'])) {
+        continue;
+      }
+
+      $attributes['rel'] = "noopener";
+      $newTag = makeAnchorTag($attributes);
+
+      $migratedContent = str_replace($tag, $newTag, $migratedContent);
+    }
+    return $migratedContent;
+  }
+
+/**
+  * Finds all HTTP URLs in a string
   *
   * @param string $string The content to search for HTTP links
   * @return string[] An array of HTTP URLs found in the content
