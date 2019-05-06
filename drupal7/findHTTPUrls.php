@@ -18,8 +18,7 @@ $queryRelevantTablesAndColumns = "
             SELECT TABLE_NAME
                 FROM INFORMATION_SCHEMA.TABLES
                 WHERE TABLE_TYPE = 'BASE TABLE'
-                AND TABLE_SCHEMA='bw'
-                AND TABLE_NAME != 'BW_POSSIBLE_LOCATIONS'
+                AND TABLE_SCHEMA='{$database}'
         )
         AND (
             c.COLUMN_TYPE LIKE '%varchar%' OR

@@ -23,7 +23,7 @@ $queryFindHttp = '
 // 3 content
 // 4 where
 $updateContent = '
-  UPDATE bw.%1$s SET %2$s = \'%3$s\' WHERE %4$s
+  UPDATE %1$s SET %2$s = \'%3$s\' WHERE %4$s
 ';
 
 echo "\n";
