@@ -15,17 +15,28 @@ function askQuestionPrintArray ($question, $array) {
 }
 
 /**
+  * Asks the command line user a question
+  *
+  * @param string $question A question to ask the user on the command line
+  * @return string What the user typed
+  */
+  function askQuestion ($question) {
+    echo "{$question}";
+    $handle = fopen ("php://stdin","r");
+    $answer = trim(fgets($handle));
+    fclose($handle);
+    return $answer;
+  }
+
+/**
   * Asks the command line user a yes/no question
   *
   * @param string $question A yes/no question to ask the user on the command line
   * @return boolean	true if the user answered y, false otherwise
   */
 function askYesNoQuestion ($question) {
-  echo "{$question} (y/n): ";
-  $handle = fopen ("php://stdin","r");
-  $line = trim(fgets($handle));
-  fclose($handle);
-  if (trim($line) == 'y') {
+  $answer = askQuestion("{$question} (y/n): ");
+  if (trim($answer) == 'y') {
       return true;
   } else {
       return false;
@@ -170,9 +181,9 @@ function isBerkeleyWellnessUrl ($url) {
   // https?://berkeleywellness.com
   // https?://www.berkeleywellnessalerts.com
   // https?://www.wellnessletter.com
-  $regex1 = '/^http:\/\/((admin|alerts|www)\.)?berkeleywellness\.com/';
-  $regex2 = '/^http:\/\/www\.berkeleywellnessalerts\.com/';
-  $regex3 = '/^http:\/\/www\.wellnessletter\.com/';
+  $regex1 = '/^https?:\/\/((admin|alerts|www)\.)?berkeleywellness\.com/';
+  $regex2 = '/^https?:\/\/www\.berkeleywellnessalerts\.com/';
+  $regex3 = '/^https?:\/\/www\.wellnessletter\.com/';
   if (preg_match($regex1, $url) ||
       preg_match($regex2, $url) ||
       preg_match($regex3, $url)
@@ -251,7 +262,38 @@ function replaceHttpForHttpsInContent($content) {
 }
 
 /**
-  * Finds all HTTP links in a string
+  * Finds all HTML anchors in a string and do stuff
+  *
+  * @param string $content The content that might contain HTTP URLs
+  * @return string The content modified to update
+  */
+  function changeAnchorTagsInContent($content) {
+    $migratedContent = $content;
+    $matchTags = findAnchorsInString($content);
+    foreach ($matchTags as $tag) {
+      $attributes = findAnchorsAttributes($tag);
+
+      $opensInNewWindow = $attributes['target'] === "_blank";
+      if (!$opensInNewWindow) {
+        continue;
+      }
+
+      preg_match('/^https?:\/\//', $attributes['href'], $matchesHttp);
+      $isAbsoluteUrl = !empty($matchesHttp);
+      if (!$isAbsoluteUrl || isBerkeleyWellnessUrl($attributes['href'])) {
+        continue;
+      }
+
+      $attributes['rel'] = "noopener";
+      $newTag = makeAnchorTag($attributes);
+
+      $migratedContent = str_replace($tag, $newTag, $migratedContent);
+    }
+    return $migratedContent;
+  }
+
+/**
+  * Finds all HTTP URLs in a string
   *
   * @param string $string The content to search for HTTP links
   * @return string[] An array of HTTP URLs found in the content
@@ -260,3 +302,40 @@ function findHttpUrlsInString ($string) {
   preg_match_all('/\b(http:\/\/[^\s"\']+)/', $string, $matches);
   return $matches[1];
 }
+
+/**
+  * Finds all anchor tags in a string
+  *
+  * @param string $string The content to search for HTTP links
+  * @return string[] An array of HTTP URLs found in the content
+  */
+  function findAnchorsInString ($string) {
+    preg_match_all('/(<a[^>]+>)/', $string, $matches);
+    return $matches[1];
+  }
+
+  /**
+  * Changes all attributes in an anchor tag into an associative array
+  *
+  * @param string $string A string version of an anchor tag
+  * @return string[] An associative array of attributes from the HTML tag
+  */
+  function findAnchorsAttributes ($string) {
+      $attributesHash = [];
+      preg_match_all('/([^"\s]+)="([^"\s]+)"/', $string, $result);
+      foreach (array_keys($result[0]) as $key) {
+        $attribute = $result[1][$key];
+        $value = $result[2][$key];
+        $attributesHash[$attribute] = $value;
+      }
+      return $attributesHash;
+  }
+
+  function makeAnchorTag ($attributes) {
+    $pieces = [];
+    foreach($attributes as $attribute => $value) {
+      array_push($pieces, "{$attribute}=\"{$value}\"");
+    }
+    $attributeString = implode(" ", $pieces);
+    return "<a {$attributeString}>";
+  }
