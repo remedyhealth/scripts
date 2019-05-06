@@ -271,3 +271,14 @@ function findHttpUrlsInString ($string) {
   preg_match_all('/\b(http:\/\/[^\s"\']+)/', $string, $matches);
   return $matches[1];
 }
+
+/**
+  * Finds all anchor tags in a string
+  *
+  * @param string $string The content to search for HTTP links
+  * @return string[] An array of HTTP URLs found in the content
+  */
+  function findAnchorsInString ($string) {
+    preg_match_all('/(<a[^>]+>)/', $string, $matches);
+    return $matches[1];
+  }
