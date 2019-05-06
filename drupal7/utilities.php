@@ -181,9 +181,9 @@ function isBerkeleyWellnessUrl ($url) {
   // https?://berkeleywellness.com
   // https?://www.berkeleywellnessalerts.com
   // https?://www.wellnessletter.com
-  $regex1 = '/^http:\/\/((admin|alerts|www)\.)?berkeleywellness\.com/';
-  $regex2 = '/^http:\/\/www\.berkeleywellnessalerts\.com/';
-  $regex3 = '/^http:\/\/www\.wellnessletter\.com/';
+  $regex1 = '/^https?:\/\/((admin|alerts|www)\.)?berkeleywellness\.com/';
+  $regex2 = '/^https?:\/\/www\.berkeleywellnessalerts\.com/';
+  $regex3 = '/^https?:\/\/www\.wellnessletter\.com/';
   if (preg_match($regex1, $url) ||
       preg_match($regex2, $url) ||
       preg_match($regex3, $url)
