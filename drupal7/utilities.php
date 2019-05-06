@@ -35,11 +35,8 @@ function askQuestionPrintArray ($question, $array) {
   * @return boolean	true if the user answered y, false otherwise
   */
 function askYesNoQuestion ($question) {
-  echo "{$question} (y/n): ";
-  $handle = fopen ("php://stdin","r");
-  $line = trim(fgets($handle));
-  fclose($handle);
-  if (trim($line) == 'y') {
+  $answer = askQuestion("{$question} (y/n): ");
+  if (trim($answer) == 'y') {
       return true;
   } else {
       return false;
