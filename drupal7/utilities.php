@@ -15,6 +15,20 @@ function askQuestionPrintArray ($question, $array) {
 }
 
 /**
+  * Asks the command line user a question
+  *
+  * @param string $question A question to ask the user on the command line
+  * @return string What the user typed
+  */
+  function askQuestion ($question) {
+    echo "{$question}";
+    $handle = fopen ("php://stdin","r");
+    $answer = trim(fgets($handle));
+    fclose($handle);
+    return $answer;
+  }
+
+/**
   * Asks the command line user a yes/no question
   *
   * @param string $question A yes/no question to ask the user on the command line
