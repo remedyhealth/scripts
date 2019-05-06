@@ -282,3 +282,22 @@ function findHttpUrlsInString ($string) {
     preg_match_all('/(<a[^>]+>)/', $string, $matches);
     return $matches[1];
   }
+
+  /**
+  * Changes all attributes in an anchor tag into an associative array
+  *
+  * @param string $string A string version of an anchor tag
+  * @return string[] An associative array of attributes from the HTML tag
+  */
+  function findAnchorsAttributes ($string) {
+      $attributesHash = [];
+      preg_match_all('/([^"\s]+)="([^"\s]+)"/', $string, $result);
+      foreach (array_keys($result[0]) as $key) {
+        $attribute = $result[1][$key];
+        $value = $result[2][$key];
+        $attributesHash[$attribute] = $value;
+      }
+      return $attributesHash;
+  }
+
+  }
