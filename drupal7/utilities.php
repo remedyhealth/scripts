@@ -300,4 +300,11 @@ function findHttpUrlsInString ($string) {
       return $attributesHash;
   }
 
+  function makeAnchorTag ($attributes) {
+    $pieces = [];
+    foreach($attributes as $attribute => $value) {
+      array_push($pieces, "{$attribute}=\"{$value}\"");
+    }
+    $attributeString = implode(" ", $pieces);
+    return "<a {$attributeString}>";
   }
