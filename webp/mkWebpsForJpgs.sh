@@ -16,3 +16,12 @@ do
     echo "The webp version does not exist";
   fi
 done
+
+files=$(find ./ -name '*.png')
+for png in $files
+do
+  webp=${png/%png/webp}
+  if [ ! -f $webp ]; then
+    echo "The webp version does not exist";
+  fi
+done
