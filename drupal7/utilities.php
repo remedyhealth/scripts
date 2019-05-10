@@ -272,15 +272,16 @@ function replaceHttpForHttpsInContent($content) {
     $matchTags = findAnchorsInString($content);
     foreach ($matchTags as $tag) {
       $attributes = findAnchorsAttributes($tag);
-
-      $opensInNewWindow = $attributes['target'] === "_blank";
+      $opensInNewWindow = (array_key_exists('target', $attributes) && $attributes['target'] == "_blank");
       if (!$opensInNewWindow) {
         continue;
       }
 
       preg_match('/^https?:\/\//', $attributes['href'], $matchesHttp);
       $isAbsoluteUrl = !empty($matchesHttp);
-      if (!$isAbsoluteUrl || isBerkeleyWellnessUrl($attributes['href'])) {
+      preg_match('/^<\?php\s/', $attributes['href'], $matchesPhp);
+      $isDynamic = !empty($matchesPhp);
+      if ((!$isAbsoluteUrl && !$isDynamic) || isBerkeleyWellnessUrl($attributes['href'])) {
         continue;
       }
 
