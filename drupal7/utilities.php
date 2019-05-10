@@ -322,10 +322,10 @@ function findHttpUrlsInString ($string) {
   */
   function findAnchorsAttributes ($string) {
       $attributesHash = [];
-      preg_match_all('/([^"\s]+)="([^"\s]+)"/', $string, $result);
+      preg_match_all('/([^\s]+)=("(.*?)")?/', $string, $result);
       foreach (array_keys($result[0]) as $key) {
         $attribute = $result[1][$key];
-        $value = $result[2][$key];
+        $value = $result[3][$key];
         $attributesHash[$attribute] = $value;
       }
       return $attributesHash;
