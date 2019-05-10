@@ -310,7 +310,7 @@ function findHttpUrlsInString ($string) {
   * @return string[] An array of HTTP URLs found in the content
   */
   function findAnchorsInString ($string) {
-    preg_match_all('/(<a[^>]+>)/', $string, $matches);
+    preg_match_all('/(<a\s([^><}]*(<\?php\s[^>]*\?>)?[^><]*)*>)/', $string, $matches);
     return $matches[1];
   }
 
