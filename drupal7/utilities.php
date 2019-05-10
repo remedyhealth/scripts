@@ -332,6 +332,13 @@ function findAnchorsAttributes ($string) {
   return $attributesHash;
 }
 
+/**
+  * Builds a string with an HTML anchor tag off an associative array of
+  * attributes
+  *
+  * @param string[] $attributes A associative array of attribute => value
+  * @return string An HTML anchor tag
+  */
 function makeAnchorTag ($attributes) {
   $pieces = [];
   foreach($attributes as $attribute => $value) {
