@@ -188,9 +188,9 @@ function isBerkeleyWellnessUrl ($url) {
       preg_match($regex2, $url) ||
       preg_match($regex3, $url)
   ) {
-      return true;
+    return true;
   } else {
-      return false;
+    return false;
   }
 }
 
@@ -251,12 +251,12 @@ function replaceHttpForHttpsInContent($content) {
   $migratedContent = $content;
   $matchUrls = findHttpUrlsInString($content);
   foreach ($matchUrls as $httpUrl) {
-      $httpsUrl = replacementUrl($httpUrl);
-      if ($httpsUrl) {
-          $migratedContent = str_replace($httpUrl, $httpsUrl, $migratedContent);
-      } else {
-          echo "Unavailable over https: {$httpUrl}\n";
-      }
+    $httpsUrl = replacementUrl($httpUrl);
+    if ($httpsUrl) {
+        $migratedContent = str_replace($httpUrl, $httpsUrl, $migratedContent);
+    } else {
+        echo "Unavailable over https: {$httpUrl}\n";
+    }
   }
   return $migratedContent;
 }
@@ -322,14 +322,14 @@ function findAnchorsInString ($string) {
   * @return string[] An associative array of attributes from the HTML tag
   */
 function findAnchorsAttributes ($string) {
-    $attributesHash = [];
-    preg_match_all('/([^\s]+)=("(.*?)")?/', $string, $result);
-    foreach (array_keys($result[0]) as $key) {
-      $attribute = $result[1][$key];
-      $value = $result[3][$key];
-      $attributesHash[$attribute] = $value;
-    }
-    return $attributesHash;
+  $attributesHash = [];
+  preg_match_all('/([^\s]+)=("(.*?)")?/', $string, $result);
+  foreach (array_keys($result[0]) as $key) {
+    $attribute = $result[1][$key];
+    $value = $result[3][$key];
+    $attributesHash[$attribute] = $value;
+  }
+  return $attributesHash;
 }
 
 function makeAnchorTag ($attributes) {
