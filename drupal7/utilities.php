@@ -20,13 +20,13 @@ function askQuestionPrintArray ($question, $array) {
   * @param string $question A question to ask the user on the command line
   * @return string What the user typed
   */
-  function askQuestion ($question) {
-    echo "{$question}";
-    $handle = fopen ("php://stdin","r");
-    $answer = trim(fgets($handle));
-    fclose($handle);
-    return $answer;
-  }
+function askQuestion ($question) {
+  echo "{$question}";
+  $handle = fopen ("php://stdin","r");
+  $answer = trim(fgets($handle));
+  fclose($handle);
+  return $answer;
+}
 
 /**
   * Asks the command line user a yes/no question
@@ -267,31 +267,31 @@ function replaceHttpForHttpsInContent($content) {
   * @param string $content The content that might contain HTTP URLs
   * @return string The content modified to update
   */
-  function changeAnchorTagsInContent($content) {
-    $migratedContent = $content;
-    $matchTags = findAnchorsInString($content);
-    foreach ($matchTags as $tag) {
-      $attributes = findAnchorsAttributes($tag);
-      $opensInNewWindow = (array_key_exists('target', $attributes) && $attributes['target'] == "_blank");
-      if (!$opensInNewWindow) {
-        continue;
-      }
-
-      preg_match('/^https?:\/\//', $attributes['href'], $matchesHttp);
-      $isAbsoluteUrl = !empty($matchesHttp);
-      preg_match('/^<\?php\s/', $attributes['href'], $matchesPhp);
-      $isDynamic = !empty($matchesPhp);
-      if ((!$isAbsoluteUrl && !$isDynamic) || isBerkeleyWellnessUrl($attributes['href'])) {
-        continue;
-      }
-
-      $attributes['rel'] = "noopener";
-      $newTag = makeAnchorTag($attributes);
-
-      $migratedContent = str_replace($tag, $newTag, $migratedContent);
+function changeAnchorTagsInContent($content) {
+  $migratedContent = $content;
+  $matchTags = findAnchorsInString($content);
+  foreach ($matchTags as $tag) {
+    $attributes = findAnchorsAttributes($tag);
+    $opensInNewWindow = (array_key_exists('target', $attributes) && $attributes['target'] == "_blank");
+    if (!$opensInNewWindow) {
+      continue;
     }
-    return $migratedContent;
+
+    preg_match('/^https?:\/\//', $attributes['href'], $matchesHttp);
+    $isAbsoluteUrl = !empty($matchesHttp);
+    preg_match('/^<\?php\s/', $attributes['href'], $matchesPhp);
+    $isDynamic = !empty($matchesPhp);
+    if ((!$isAbsoluteUrl && !$isDynamic) || isBerkeleyWellnessUrl($attributes['href'])) {
+      continue;
+    }
+
+    $attributes['rel'] = "noopener";
+    $newTag = makeAnchorTag($attributes);
+
+    $migratedContent = str_replace($tag, $newTag, $migratedContent);
   }
+  return $migratedContent;
+}
 
 /**
   * Finds all HTTP URLs in a string
@@ -310,33 +310,41 @@ function findHttpUrlsInString ($string) {
   * @param string $string The content to search for HTTP links
   * @return string[] An array of HTTP URLs found in the content
   */
-  function findAnchorsInString ($string) {
-    preg_match_all('/(<a\s([^><}]*(<\?php\s[^>]*\?>)?[^><]*)*>)/', $string, $matches);
-    return $matches[1];
-  }
+function findAnchorsInString ($string) {
+  preg_match_all('/(<a\s([^><}]*(<\?php\s[^>]*\?>)?[^><]*)*>)/', $string, $matches);
+  return $matches[1];
+}
 
-  /**
+/**
   * Changes all attributes in an anchor tag into an associative array
   *
   * @param string $string A string version of an anchor tag
   * @return string[] An associative array of attributes from the HTML tag
   */
-  function findAnchorsAttributes ($string) {
-      $attributesHash = [];
-      preg_match_all('/([^\s]+)=("(.*?)")?/', $string, $result);
-      foreach (array_keys($result[0]) as $key) {
-        $attribute = $result[1][$key];
-        $value = $result[3][$key];
-        $attributesHash[$attribute] = $value;
-      }
-      return $attributesHash;
-  }
-
-  function makeAnchorTag ($attributes) {
-    $pieces = [];
-    foreach($attributes as $attribute => $value) {
-      array_push($pieces, "{$attribute}=\"{$value}\"");
+function findAnchorsAttributes ($string) {
+    $attributesHash = [];
+    preg_match_all('/([^\s]+)=("(.*?)")?/', $string, $result);
+    foreach (array_keys($result[0]) as $key) {
+      $attribute = $result[1][$key];
+      $value = $result[3][$key];
+      $attributesHash[$attribute] = $value;
     }
-    $attributeString = implode(" ", $pieces);
-    return "<a {$attributeString}>";
+    return $attributesHash;
+}
+
+function makeAnchorTag ($attributes) {
+  $pieces = [];
+  foreach($attributes as $attribute => $value) {
+    array_push($pieces, "{$attribute}=\"{$value}\"");
   }
+  return $attributesHash;
+}
+
+function makeAnchorTag ($attributes) {
+  $pieces = [];
+  foreach($attributes as $attribute => $value) {
+    array_push($pieces, "{$attribute}=\"{$value}\"");
+  }
+  $attributeString = implode(" ", $pieces);
+  return "<a {$attributeString}>";
+}
