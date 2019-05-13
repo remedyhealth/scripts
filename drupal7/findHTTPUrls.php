@@ -2,7 +2,7 @@
 require_once('utilities.php');
 
 $host = askQuestion('database host: ');
-$password = askQuestion('database port: ');
+$port = askQuestion('database port: ');
 $username = askQuestion('database username: ');
 $password = askQuestion('database password: ');
 $database = askQuestion('database name: ');
