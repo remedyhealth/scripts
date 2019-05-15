@@ -177,19 +177,11 @@ function replacementUrl ($url) {
   */
 function isBerkeleyWellnessUrl ($url) {
   // if the URL begins with one of the below, then it's a bw URL
-  // https?://admin.berkeleywellness.com
   // https?://alerts.berkeleywellness.com
   // https?://www.berkeleywellness.com
   // https?://berkeleywellness.com
-  // https?://www.berkeleywellnessalerts.com
-  // https?://www.wellnessletter.com
-  $regex1 = '/^https?:\/\/((alerts|www)\.)?berkeleywellness\.com/';
-  $regex2 = '/^https?:\/\/www\.berkeleywellnessalerts\.com/';
-  $regex3 = '/^https?:\/\/www\.wellnessletter\.com/';
-  if (preg_match($regex1, $url) ||
-      preg_match($regex2, $url) ||
-      preg_match($regex3, $url)
-  ) {
+  $regex = '/^https?:\/\/((alerts|www)\.)?berkeleywellness\.com/';
+  if (preg_match($regex, $url)) {
     return true;
   } else {
     return false;
