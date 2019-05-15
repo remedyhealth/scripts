@@ -45,7 +45,9 @@ function askYesNoQuestion ($question) {
 
 // a hash of urls found to valid https urls when available
 if (!is_array($mapUrls)) {
-  $mapUrls = [];
+  $mapUrls = [
+    "http://w.sharethis.com/button/buttons.js" => "https://ws.sharethis.com/button/buttons.js"
+  ];
 }
 
 /**
@@ -178,7 +180,7 @@ function isBerkeleyWellnessUrl ($url) {
   // https?://alerts.berkeleywellness.com
   // https?://www.berkeleywellness.com
   // https?://berkeleywellness.com
-  $regex = '/^https?:\/\/((admin|alerts|www)\.)?berkeleywellness\.com/';
+  $regex = '/^https?:\/\/((alerts|www)\.)?berkeleywellness\.com/';
   if (preg_match($regex, $url)) {
     return true;
   } else {

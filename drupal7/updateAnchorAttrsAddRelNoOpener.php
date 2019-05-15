@@ -1,11 +1,11 @@
 <?php
 require_once('utilities.php');
 
-$host = askQuestion('database host');
-$password = askQuestion('database port');
-$username = askQuestion('database username');
-$password = askQuestion('database password');
-$database = askQuestion('database name');
+$host = askQuestion('database host: ');
+$port = askQuestion('database port: ');
+$username = askQuestion('database username: ');
+$password = askQuestion('database password: ');
+$database = askQuestion('database name: ');
 
 $connection = mysqli_connect($host, $username, $password, $database, $port);
 
