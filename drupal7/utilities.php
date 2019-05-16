@@ -256,6 +256,27 @@ function replaceHttpForHttpsInContent($content) {
 }
 
 /**
+  * Finds all HTTPS URLs to alerts.berkleywellness.com and replace them with
+  * HTTP URLs
+  *
+  * @param string $content The content that might contain HTTP URLs
+  * @return string The content modified to update URLs
+  */
+function replaceHttpsAlertUrlsToHttp($content) {
+  $migratedContent = $content;
+  $matchUrls = findAlertsHttpUrlsInString($content);
+  foreach ($matchUrls as $httpsUrl) {
+    $httpUrl = "http". substr($httpsUrl, 5);
+    if ($httpUrl) {
+      $migratedContent = str_replace($httpsUrl, $httpUrl, $migratedContent);
+    } else {
+      echo "Nothing to do for: {$httpsUrl}\n";
+    }
+  }
+  return $migratedContent;
+}
+
+/**
   * Finds all HTML anchors in a string and do stuff
   *
   * @param string $content The content that might contain HTTP URLs
