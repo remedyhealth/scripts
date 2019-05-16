@@ -299,6 +299,17 @@ function findHttpUrlsInString ($string) {
 }
 
 /**
+  * Finds all https://alerts.berkeleywellness.com URLs in a string
+  *
+  * @param string $string The content to search for HTTP links
+  * @return string[] An array of HTTP URLs found in the content
+  */
+function findAlertsHttpUrlsInString ($string) {
+  preg_match_all('/\b(https:\/\/alerts\.berkeleywellness\.com[^\s"\']*)/', $string, $matches);
+  return $matches[1];
+}
+
+/**
   * Finds all anchor tags in a string
   *
   * @param string $string The content to search for HTTP links
