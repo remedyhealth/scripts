@@ -1,6 +1,6 @@
 {
-  "id": "jsonFormEditor",
-  "name": "JSON Form Editor",
+  "id": "ad-tags",
+  "name": "Ad Tags",
   "srcdoc": "./index.html",
   "fieldTypes": ["Object"]
 }
