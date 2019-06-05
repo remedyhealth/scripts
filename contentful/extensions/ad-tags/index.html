@@ -24,7 +24,72 @@
             "use strict";JSONEditor.defaults.themes.contentful=function(e){function r(e,r){return t(function(r){r instanceof HTMLElement&&(r.className+=(r.className?" ":"")+e)},r)}function t(e,r){return function(t){var t=(r||this._super).apply(this,arguments);r||(t.className="");var n=[t].concat(Array.prototype.slice.call(arguments));return e.apply(this,n)||t}}var n=e.AbstractTheme,c={getFormControl:"cf-form-field",getIndentedPanel:function(){return document.createElement("div")},getFormInputField:"cf-form-input",getFormInputDescription:"cf-form-hint",getFormInputLabel:"jfe-label",afterInputReady:function(e){e.cfFormField=e.cfFormField||this.closest(e,".cf-form-field")},getButton:t(function(e,r,t,n){e.className=r.match(/save/i)?"cf-btn-primary":"cf-btn-secondary"}),getHeader:t(function(e,r){if(!(r instanceof HTMLElement)){var t=document.createElement("span");t.appendChild(document.createTextNode(r)),e.innerHTML="",e.appendChild(t),r=t}r.className="jfe-label jfe-header-label";var n=document.createElement("div");return n.innerHTML=e.innerHTML,n}),getHeaderButtonHolder:"jfe-button-holder",getSelectInput:"cf-form-input",getSwitcher:function(e){var r=this.getSelectInput(e);return r.className+=" jfe-switcher",r},getErrorMessage:function(e){var r=document.createElement("div");return r.appendChild(document.createTextNode(e)),r.className="cf-field-error",r},addInputError:function(e,r){e.cfFormField&&(e.cfFieldError||(e.cfFieldError=document.createElement("div"),e.cfFieldError.className="cf-field-error",e.cfFormField.appendChild(e.cfFieldError)),e.cfFieldError.textContent=r,e.className+=" cf-has-error")},removeInputError:function(e){e.cfFieldError&&(e.cfFormField.removeChild(e.cfFieldError),delete e.cfFieldError,e.cfFormField.className=e.cfFormField.className.replace(/\s?cf-field-error/g,""),e.className=e.className.replace(/\s?cf-has-error/g,""))}};for(var o in c){var a=c[o];"string"==typeof a&&(c[o]=r(a))}for(var o in n.prototype)if("get"===o.substr(0,3)){var i=o.replace(/^get/,"jfe").replace(/([A-Z])/g,"-$1").toLowerCase(),l="function"==typeof c[o]&&c[o];c[o]=r(i,l)}return n.extend(c)}(JSONEditor);
         </script>
         <script>
-            window.CONTENTFUL_FORM_EDITOR_SCHEMA={title:"Ad Tags",type:"object",options:{collapsed:!0},id:"ad-tags",format:"grid",properties:{adSite:{type:"string",description:"Ad Site",propertyOrder:10},category:{type:"string",description:"Category",propertyOrder:15},adCategory1:{type:"string",description:"Ad Category 1",propertyOrder:20},adCategory2:{type:"string",description:"Ad Category 2",propertyOrder:30},adCategory3:{type:"string",description:"Ad Category 3",propertyOrder:40},adCategory4:{type:"string",description:"Ad Category 4",propertyOrder:50},keyword:{type:"string",description:"Keyword",propertyOrder:60},i:{type:"string",description:"I value",propertyOrder:70},c:{type:"string",description:"C value",propertyOrder:80},excludeCategories:{type:"string",description:"Exclude Category value",propertyOrder:90},ugc:{type:"string",description:"UGC",propertyOrder:100}}};
+            window.CONTENTFUL_FORM_EDITOR_SCHEMA = {
+                title: "Ad Tags",
+                type: "object",
+                options: {
+                    collapsed:!0
+                },
+                id: "ad-tags",
+                format: "grid",
+                properties: {
+                    adSite: {
+                        type: "string",
+                        description: "Ad Site",
+                        propertyOrder: 10
+                    },
+                    category: {
+                        type: "string",
+                        description: "Category",
+                        propertyOrder: 15
+                    },
+                    adCategory1: {
+                        type: "string",
+                        description: "Ad Category 1",
+                        propertyOrder: 20
+                    },
+                    adCategory2: {
+                        type: "string",
+                        description: "Ad Category 2",
+                        propertyOrder: 30
+                    },
+                    adCategory3: {
+                        type: "string",
+                        description: "Ad Category 3",
+                        propertyOrder: 40
+                    },
+                    adCategory4: {
+                        type: "string",
+                        description: "Ad Category 4",
+                        propertyOrder: 50
+                    },
+                    keyword: {
+                        type: "string",
+                        description: "Keyword",
+                        propertyOrder: 60
+                    },
+                    i: {
+                        type: "string",
+                        description: "I value",
+                        propertyOrder: 70
+                    },
+                    c: {
+                        type: "string",
+                        description: "C value",
+                        propertyOrder: 80
+                    },
+                    excludeCategories: {
+                        type:"string",
+                        description: "Exclude Category value",
+                        propertyOrder: 90
+                    },
+                    ugc: {
+                        type:"string",
+                        description:"UGC",
+                        propertyOrder:100
+                    }
+                }
+            };
         </script>
         <script>
             "use strict";function initContentfulJsonFormEditor(e){function t(){e.window.updateHeight(),i()}e.window.startAutoResizer();var n=createElement("div",{className:"jfe-editor-root"}),o=new JSONEditor(n,{theme:"contentful",schema:window.CONTENTFUL_FORM_EDITOR_SCHEMA,no_additional_properties:!0,required_by_default:!0,startval:e.field.getValue(),disable_collapse:!1,disable_properties:!0,show_errors:"always"});o.on("change",t);var i=debounce(function(){var t=o.validate();if(0===t.length){var n=o.getValue();e.field.setValue(n)}},150)}function createElement(e,t,n){var o,i=document.createElement(e);for(o in t)i[o]=t[o];return n=n||document.body,n.appendChild(i),i}function debounce(e,t){var n;return function(){var o=this,i=arguments,r=function(){n=null,e.apply(o,i)};clearTimeout(n),n=setTimeout(r,t),n||e.apply(o,i)}}var cfExt=window.contentfulExtension||window.contentfulWidget;cfExt.init(initContentfulJsonFormEditor);
