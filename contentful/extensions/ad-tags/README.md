@@ -7,4 +7,5 @@ This extension provides a JSON form editor for ad tags (based on the [JSON Form 
 2. In the header, go to Settings >> Extensions
 3. In the Add extension button dropdown on the right, select Install from Github.
 4. Paste in the url for the extension.json file in this folder: https://github.com/remedyhealth/scripts/blob/master/contentful/extensions/ad-tags/extension.json
-5. Click Install & you're done. You don't need to edit or save on the next page.
+5. Click Install. You don't need to edit or save on the next page.
+6. You can now select this custom input widget on any Object field in the content model.
