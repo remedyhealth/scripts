@@ -1,5 +1,5 @@
 {
-  "id": "adTagsEditor",
+  "id": "ad-tags",
   "name": "Ad Tags",
   "srcdoc": "./index.html",
   "fieldTypes": ["Object"]
