@@ -13,6 +13,6 @@
     "contentful-management": "^3.11.0",
     "dotenv": "^4.0.0",
     "fast-csv": "^2.4.0",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.13"
   }
 }
