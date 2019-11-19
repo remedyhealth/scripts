@@ -30,7 +30,8 @@ const mcRequest = async (url, key, all) => {
       const response = await actualRequest(`${url}&offset=${perPage * curPage}`)
       curPage++
       total = response.total_items
-      all.push(...response[key])
+      const value = response[key] || []
+      all.push(...value)
       console.log('curPage', curPage)
       console.log('total_items', total)
       // console.log('`${url}&offset=${perPage * curPage}`', `${url}&offset=${perPage * curPage}`)
