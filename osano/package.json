@@ -1,0 +1,23 @@
+{
+  "name": "remedy-osano-scripts",
+  "version": "1.0.0",
+  "description": "Scripts to automate work with Osano",
+  "main": "addRules.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Remedy Health Media",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": "12.14.1",
+    "npm": "6.13.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/remedyhealth/germane.git"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}
