@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "diffchecker": "^0.1.4",
+    "diffchecker": "^0.2.8",
     "node-fetch": "^2.3.0"
   }
 }
